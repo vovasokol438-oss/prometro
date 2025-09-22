@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>PRO МЕТРО — Розыгрыши</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #004d66;
+      padding: 15px;
+      text-align: center;
+    }
+    header nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    header nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      padding: 20px;
+      text-align: center;
+    }
+    select, input, button {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+    }
+    .error {
+      border: 2px solid red;
+    }
+    .error-message {
+      color: red;
+      font-size: 14px;
+    }
+    .success-message {
+      color: green;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init("F_eRZhQRJfY_X-rTh"); // Public Key
+    })();
+  </script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html">Главная</a>
+      <a href="index.html">Розыгрыши</a>
+      <a href="#">Связаться с нами</a>
+      <a href="#">Информация</a>
+      <a href="#">Видеоролики</a>
+    </nav>
+  </header>
+  <main>
+    <h1>Добро пожаловать на сайт канала PRO МЕТРО</h1>
+    <p>Выберите вашу почту:</p>
+
+    <select id="emailSelect">
+      <option value="">-- Выберите почту --</option>
+      <option>vova.sokolov.2204@mail.ru</option>
+      <option>lusgge_777mosruur@yandex.ru</option>
+      <option>dleha-477-789456123@hotmail.ru</option>
+    </select>
+    <button onclick="window.location.href='oops.html'">Выбрать другой</button>
+
+    <h2>Заполните форму</h2>
+    <form id="lotteryForm">
+      <input type="text" name="firstName" placeholder="Имя">
+      <div class="error-message"></div>
+
+      <input type="text" name="lastName" placeholder="Фамилия">
+      <div class="error-message"></div>
+
+      <select name="country">
+        <option value="">-- Выберите страну --</option>
+        <option>Российская Федерация</option>
+        <option>Республика Беларусь</option>
+        <option>Казахстан</option>
+        <option>Республика Крым</option>
+      </select>
+      <div class="error-message"></div>
+
+      <input type="text" name="region" placeholder="Регион / область">
+      <div class="error-message"></div>
+
+      <input type="text" name="city" placeholder="Город / поселок">
+      <div class="error-message"></div>
+
+      <input type="text" name="street" placeholder="Улица">
+      <div class="error-message"></div>
+
+      <input type="text" name="house" placeholder="Номер дома / кв.">
+      <div class="error-message"></div>
+
+      <input type="text" name="postal" placeholder="Почтовый индекс">
+      <div class="error-message"></div>
+
+      <input type="text" name="phone" placeholder="Телефон">
+      <div class="error-message"></div>
+
+      <input type="email" name="email" placeholder="Эл. почта">
+      <div class="error-message"></div>
+
+      <input type="password" name="password" placeholder="Пароль">
+      <div class="error-message"></div>
+
+      <button type="submit">Отправить</button>
+    </form>
+
+    <div id="result"></div>
+  </main>
+
+  <script>
+    const form = document.getElementById("lotteryForm");
+    const result = document.getElementById("result");
+    const validPasswords = ["5745", "0231", "1789"];
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      let isValid = true;
+      result.innerHTML = "";
+
+      [...form.elements].forEach(el => {
+        if (el.tagName === "INPUT" || el.tagName === "SELECT") {
+          const errorDiv = el.nextElementSibling;
+          if (el.value.trim() === "") {
+            el.classList.add("error");
+            errorDiv.textContent = "Это обязательное поле.";
+            isValid = false;
+          } else {
+            el.classList.remove("error");
+            errorDiv.textContent = "";
+          }
+        }
+      });
+
+      const password = form.password.value.trim();
+      if (isValid) {
+        if (validPasswords.includes(password)) {
+          emailjs.sendForm("service_9pj4l6v", "template_s93y1d6", form)
+            .then(() => {
+              result.innerHTML = "<p class='success-message'>Отлично! Ожидайте приз в течение 3 месяцев.</p>";
+              form.reset();
+            }, (error) => {
+              result.innerHTML = "<p style='color:red'>Ошибка при отправке: " + error.text + "</p>";
+            });
+        } else {
+          form.password.classList.add("error");
+          form.password.nextElementSibling.textContent = "Неверный пароль.";
+        }
+      }
+    });
+  </script>
+</body>
+</html>
